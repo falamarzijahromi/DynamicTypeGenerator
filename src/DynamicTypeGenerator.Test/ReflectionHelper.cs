@@ -178,5 +178,18 @@ namespace DynamicTypeGenerator.Tests
 
             return null;
         }
+
+	    public static void ExecuteMethod(
+		    Type classType, 
+		    string methodName, 
+		    Dictionary<Type, object> ctorParamValueMapping, 
+		    Dictionary<Type, object> paramsValueMapping)
+	    {
+		    var @object = Activator.CreateInstance(classType, ctorParamValueMapping.Values.ToArray());
+
+		    var method = @object.GetType().GetMethod(methodName);
+
+		    method.Invoke(@object, paramsValueMapping.Values.ToArray());
+	    }
     }
 }

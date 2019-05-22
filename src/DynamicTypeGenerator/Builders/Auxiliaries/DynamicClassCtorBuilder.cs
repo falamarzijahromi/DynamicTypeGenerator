@@ -7,7 +7,7 @@ using System.Reflection.Emit;
 
 namespace DynamicTypeGenerator.Builders.Auxiliaries
 {
-    internal class DynamicClassCtorBuilder : IBuildStep
+    internal class DynamicClassCtorBuilder
     {
         private readonly IDictionary<string, Type> ctorParams;
 
@@ -16,7 +16,7 @@ namespace DynamicTypeGenerator.Builders.Auxiliaries
             this.ctorParams = ctorParams;
         }
 
-        public void Build(TypeBuilder typeBuilder)
+        public List<FieldBuilder> Build(TypeBuilder typeBuilder)
         {
             var @params = new List<Type> { typeof(IInvokationEvaluator) };
 
@@ -25,6 +25,8 @@ namespace DynamicTypeGenerator.Builders.Auxiliaries
             var fieldBuilders = DefineFields(typeBuilder);
 
             DefineCtor(typeBuilder, fieldBuilders);
+
+	        return fieldBuilders;
         }
 
         private List<FieldBuilder> DefineFields(TypeBuilder typeBuilder)

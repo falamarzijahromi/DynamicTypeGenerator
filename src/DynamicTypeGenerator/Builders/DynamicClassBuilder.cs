@@ -9,7 +9,7 @@ namespace DynamicTypeGenerator.Builders
 {
     internal class DynamicClassBuilder : DynamicTypeBuilder
     {
-        private readonly IDictionary<string, Type> ctorParams;
+	    private readonly IList<FieldBuilder> fields;
 
         public DynamicClassBuilder(string className, IDictionary<string, Type> ctorParams)
         {
@@ -17,15 +17,16 @@ namespace DynamicTypeGenerator.Builders
 
             TypeBuilder = moduleBuilder.DefineType(className, TypeAttributes.Class | TypeAttributes.Public);
 
-            AddCtorParamsStep(ctorParams);
-            this.ctorParams = ctorParams;
+			var ctorBuilder = new DynamicClassCtorBuilder(ctorParams);
+
+	        fields = ctorBuilder.Build(TypeBuilder);
         }
 
         protected override TypeBuilder TypeBuilder { get; }
 
         public override IDynamicMethodBuilder SetMethod(string methodName)
         {
-            var methodBuilder = new DynamicClassMethodBuilder(methodName, ctorParams);
+            var methodBuilder = new DynamicClassMethodBuilder(methodName, fields);
 
             AddBuildStep(methodBuilder);
 
@@ -35,13 +36,6 @@ namespace DynamicTypeGenerator.Builders
         public override IDynamicPropertyBuilder SetProperty(string propertyName, Type propertyType)
         {
             throw new NotSupportedException("Property For Class Still Doesn't Requested");
-        }
-
-        private void AddCtorParamsStep(IDictionary<string, Type> ctorParams)
-        {
-            var step = new DynamicClassCtorBuilder(ctorParams);
-
-            AddBuildStep(step);
         }
     }
 }

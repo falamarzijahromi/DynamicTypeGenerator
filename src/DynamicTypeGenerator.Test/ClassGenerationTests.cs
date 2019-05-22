@@ -85,7 +85,49 @@ namespace DynamicTypeGenerator.Tests
             AssertInstaciatedObjectHavingSpecifiedFieldValues(classType, fieldValues);
         }
 
-        private void AssertInstaciatedObjectHavingSpecifiedFieldValues(Type classType, Dictionary<string, object> fieldValues)
+	    [Fact]
+	    public void Dynamic_Class_Must_Be_Created_With_The_Defined_Working_Method()
+	    {
+		    var method1Name = "Method1";
+		    var method1ReturnType = typeof(string);
+		    var method1Params = new List<Type> { typeof(int), typeof(string) };
+
+			var testEvaluator = new TestEvaluator();
+
+		    var ctorParamValueMapping = new Dictionary<Type, object>
+		    {
+			    {typeof(IInvokationEvaluator), testEvaluator},
+		    };
+
+		    var paramsValueMapping = new Dictionary<Type, object>
+		    {
+			    {typeof(int), 21},
+			    {typeof(string), "sdf"},
+			};
+
+		    var builder = DynamicTypeBuilderFactory.CreateClassBuilder("Dynamic.TestClass", new Dictionary<string, Type>());
+
+		    SetMethod(builder, method1Name, method1ReturnType, method1Params);
+
+		    var classType = builder.Build();
+
+		    CallMethodOfTypeWithParams(
+				method1Name,
+			    classType,
+			    ctorParamValueMapping,
+			    paramsValueMapping);
+	    }
+
+	    private void CallMethodOfTypeWithParams(
+			string methodName,
+		    Type classType,
+		    Dictionary<Type, object> ctorParamValueMapping, 
+		    Dictionary<Type, object> paramsValueMapping)
+	    {
+		    ReflectionHelper.ExecuteMethod(classType, methodName, ctorParamValueMapping, paramsValueMapping);
+	    }
+
+	    private void AssertInstaciatedObjectHavingSpecifiedFieldValues(Type classType, Dictionary<string, object> fieldValues)
         {
             Assert.True(ReflectionHelper.InstanciatedObjectHasSpecifiedFieldValues(classType, fieldValues));
         }

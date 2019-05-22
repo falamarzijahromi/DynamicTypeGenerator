@@ -1,0 +1,5 @@
+C:\Users\Mehdi\source\repos\DynamicTypeGenerator\DynamicTypeGenerator\obj\Debug\DynamicTypeGenerator.csproj.CoreCompileInputs.cache
+C:\Users\Mehdi\source\repos\DynamicTypeGenerator\DynamicTypeGenerator\bin\Debug\DynamicTypeGenerator.dll
+C:\Users\Mehdi\source\repos\DynamicTypeGenerator\DynamicTypeGenerator\bin\Debug\DynamicTypeGenerator.pdb
+C:\Users\Mehdi\source\repos\DynamicTypeGenerator\DynamicTypeGenerator\obj\Debug\DynamicTypeGenerator.dll
+C:\Users\Mehdi\source\repos\DynamicTypeGenerator\DynamicTypeGenerator\obj\Debug\DynamicTypeGenerator.pdb

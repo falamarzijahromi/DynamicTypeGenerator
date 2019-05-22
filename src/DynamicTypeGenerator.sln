@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.168
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicTypeGenerator.Tests", "DynamicTypeGenerator.Test\DynamicTypeGenerator.Tests.csproj", "{08E669E3-E0DB-4B2B-A32D-0CDD8B73FEBE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicTypeGenerator", "DynamicTypeGenerator\DynamicTypeGenerator.csproj", "{9B2FEE30-4784-4797-B1D6-537EC36DC9BE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{08E669E3-E0DB-4B2B-A32D-0CDD8B73FEBE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08E669E3-E0DB-4B2B-A32D-0CDD8B73FEBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08E669E3-E0DB-4B2B-A32D-0CDD8B73FEBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08E669E3-E0DB-4B2B-A32D-0CDD8B73FEBE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B2FEE30-4784-4797-B1D6-537EC36DC9BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B2FEE30-4784-4797-B1D6-537EC36DC9BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B2FEE30-4784-4797-B1D6-537EC36DC9BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B2FEE30-4784-4797-B1D6-537EC36DC9BE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {23CEED45-741C-498C-B226-4060DB0D3265}
+	EndGlobalSection
+EndGlobal

@@ -72,7 +72,7 @@ namespace DynamicTypeGenerator.Tests
 
             var fieldValues = new Dictionary<string, object>
             {
-                { "_evaluator", new TestEvaluator()},
+                { "_evaluator", new TestEvaluatorMock()},
                 { "_arg1", "SampleString"},
                 { "_arg2", 456},
                 { "_arg3", Guid.NewGuid()},
@@ -85,19 +85,55 @@ namespace DynamicTypeGenerator.Tests
             AssertInstaciatedObjectHavingSpecifiedFieldValues(classType, fieldValues);
         }
 
-	    [Fact]
-	    public void Dynamic_Class_Must_Be_Created_With_The_Defined_Working_Method()
+	    [Theory]
+
+        [InlineData(typeof(int))]
+        [InlineData(typeof(Guid))]
+        [InlineData(typeof(object))]
+        [InlineData(typeof(string))]
+        [InlineData(typeof(Exception))]
+        [InlineData(typeof(ConsoleColor))]
+
+        [InlineData(typeof(ConsoleColor[]))]
+        [InlineData(typeof(Exception[]))]
+        [InlineData(typeof(Guid[]))]
+        [InlineData(typeof(int[]))]
+        [InlineData(typeof(string[]))]
+        [InlineData(typeof(object[]))]
+
+        [InlineData(typeof(IEnumerable<object>))]
+        [InlineData(typeof(IEnumerable<int>))]
+        [InlineData(typeof(IEnumerable<string>))]
+        [InlineData(typeof(IEnumerable<Guid>))]
+        [InlineData(typeof(IEnumerable<Exception>))]
+        [InlineData(typeof(IEnumerable<ConsoleColor>))]
+
+        [InlineData(typeof(ICollection<object>))]
+        [InlineData(typeof(ICollection<int>))]
+        [InlineData(typeof(ICollection<string>))]
+        [InlineData(typeof(ICollection<Guid>))]
+        [InlineData(typeof(ICollection<Exception>))]
+        [InlineData(typeof(ICollection<ConsoleColor>))]
+
+        [InlineData(typeof(List<object>))]
+        [InlineData(typeof(List<int>))]
+        [InlineData(typeof(List<string>))]
+        [InlineData(typeof(List<Guid>))]
+        [InlineData(typeof(List<Exception>))]
+        [InlineData(typeof(List<ConsoleColor>))]
+
+        public void Dynamic_Class_Must_Be_Created_With_The_Defined_Working_Method_With_Specified_Return_Type(Type returnType)
 	    {
 		    var method1Name = "Method1";
-		    var method1ReturnType = typeof(void);
+		    var method1ReturnType = returnType;
 		    var method1Params = new List<Type> { typeof(int), typeof(string) };
 
-			var testEvaluator = new TestEvaluator();
+			var testEvaluator = new TestEvaluatorMock();
 
 		    var ctorParamValueMapping = new Dictionary<Type, object>
 		    {
 			    {typeof(IInvokationEvaluator), testEvaluator},
-			    {typeof(string), "Hello"},
+			    {typeof(string), "someString"},
             };
 
 		    var paramsValueMapping = new Dictionary<Type, object>
@@ -106,7 +142,7 @@ namespace DynamicTypeGenerator.Tests
 			    {typeof(string), "sdf"},
 			};
 
-		    var builder = DynamicTypeBuilderFactory.CreateClassBuilder("Dynamic.TestClass", new Dictionary<string, Type>{{"manamHaji", typeof(string)}});
+		    var builder = DynamicTypeBuilderFactory.CreateClassBuilder("Dynamic.TestClass", new Dictionary<string, Type>{{"someId", typeof(string)}});
 
 		    SetMethod(builder, method1Name, method1ReturnType, method1Params);
 

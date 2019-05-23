@@ -65,8 +65,6 @@ namespace DynamicTypeGenerator.Builders.Auxiliaries
         {
             var ilGen = methodBuilder.GetILGenerator();
 
-            ilGen.Emit(OpCodes.Nop);
-
             var invokationContextVariable = InstanciateInvokationContext(ilGen);
 
             AddFieldsToContext(ilGen, invokationContextVariable);
@@ -82,22 +80,23 @@ namespace DynamicTypeGenerator.Builders.Auxiliaries
 
         private void EvaluateMethodReturn(ILGenerator ilGen, LocalBuilder invokeResultVariable)
         {
-            if (returnType.Equals(typeof(void)))
+            if (!returnType.Equals(typeof(void)))
             {
-                //ilGen.Emit(OpCodes.Pop);
+                ilGen.Emit(OpCodes.Ldloc, invokeResultVariable);
+
+                PrepareTheReturn(ilGen);
+            }
+        }
+
+        private void PrepareTheReturn(ILGenerator ilGen)
+        {
+            if (returnType.IsValueType)
+            {
+                ilGen.Emit(OpCodes.Unbox_Any, returnType);
             }
             else
             {
-                var castedInvokationResultVariable = ilGen.DeclareLocal(returnType);
-
-                ilGen.Emit(OpCodes.Ldloc, invokeResultVariable);
                 ilGen.Emit(OpCodes.Castclass, returnType);
-
-                ilGen.Emit(OpCodes.Stloc, castedInvokationResultVariable);
-
-                ilGen.Emit(OpCodes.Br_S);
-
-                ilGen.Emit(OpCodes.Ldloc, castedInvokationResultVariable);
             }
         }
 

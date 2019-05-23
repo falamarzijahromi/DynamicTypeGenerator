@@ -46,7 +46,7 @@ namespace DynamicTypeGenerator.Abstracts
             var assemblyName = new AssemblyName("SomeAssemblyName");
 
             var assemblyBuilder =
-                AppDomain.CurrentDomain.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
+                AppDomain.CurrentDomain.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.RunAndSave);
 
             return assemblyBuilder.DefineDynamicModule("SomeModuleName");
         }

@@ -89,7 +89,6 @@ namespace DynamicTypeGenerator.Builders.Auxiliaries
             var propertyBuilder = typeBuilder.DefineProperty(
                 _propertyName,
                 PropertyAttributes.None,
-                CallingConventions.Standard,
                 _propertyType,
                 new Type[0]);
 

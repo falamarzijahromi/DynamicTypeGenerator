@@ -5,9 +5,9 @@
     <version>1.0.0</version>
     <authors>Mehdi Falamarzi</authors>
     <owners>Mehdi Falamarzi</owners>
-    <licenseUrl>https://github.com/falamarzijahromi/DynamicTypeGenerator/blob/master/LICENSE</licenseUrl>
+    <license>https://github.com/falamarzijahromi/DynamicTypeGenerator/blob/master/LICENSE</license>
     <projectUrl>https://github.com/falamarzijahromi/DynamicTypeGenerator</projectUrl>
-    <iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl>
+    <iconUrl>https://github.com/falamarzijahromi/DynamicTypeGenerator/blob/master/src/icons8-robot-48.png?raw=true</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Dynamic Type Generator For .NET</description>
     <releaseNotes>Initial Release Of DynamicTypeGenerator.</releaseNotes>

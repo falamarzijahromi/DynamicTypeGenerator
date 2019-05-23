@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>DynamicTypeGenerator.csproj</id>
+    <version>1.0.0</version>
+    <authors>Mehdi Falamarzi</authors>
+    <owners>Mehdi Falamarzi</owners>
+    <licenseUrl>https://github.com/falamarzijahromi/DynamicTypeGenerator/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/falamarzijahromi/DynamicTypeGenerator</projectUrl>
+    <iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Dynamic Type Generator For .NET</description>
+    <releaseNotes>Initial Release Of DynamicTypeGenerator.</releaseNotes>
+    <copyright>Copyright 2019</copyright>
+    <tags>Dynamic DynamicType DynaimcTypeGenerator Proxy DynaimProxy Dynamic DynamicType DynamicClass DynamicInterface DynamicAttribute DynamicAttributeCreation AttributeCreation Runtim RuntimType RuntimeInterface RuntimClass RuntimeAttribute</tags>
+    <dependencies>
+    </dependencies>
+  </metadata>
+</package>

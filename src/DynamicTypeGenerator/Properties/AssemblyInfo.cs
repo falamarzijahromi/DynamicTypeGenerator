@@ -5,10 +5,10 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("DynamicTypeGenerator")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Dynamic Type Generator In .NET Framework")]
+[assembly: AssemblyDescription("Wrapper For Reflection.Emit Namespace")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Mehdi Falamarzi")]
 [assembly: AssemblyProduct("DynamicTypeGenerator")]
 [assembly: AssemblyCopyright("Copyright ©  2019")]
 [assembly: AssemblyTrademark("")]

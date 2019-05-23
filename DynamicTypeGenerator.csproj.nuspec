@@ -13,6 +13,7 @@
     <releaseNotes>Initial Release Of DynamicTypeGenerator.</releaseNotes>
     <copyright>Copyright 2019</copyright>
     <tags>Dynamic DynamicType DynaimcTypeGenerator Proxy DynaimProxy Dynamic DynamicType DynamicClass DynamicInterface DynamicAttribute DynamicAttributeCreation AttributeCreation Runtim RuntimType RuntimeInterface RuntimClass RuntimeAttribute</tags>
+	<summary>Dynamic Type Generator For .NET</summary>
     <dependencies>
     </dependencies>
   </metadata>

@@ -89,7 +89,7 @@ namespace DynamicTypeGenerator.Tests
 	    public void Dynamic_Class_Must_Be_Created_With_The_Defined_Working_Method()
 	    {
 		    var method1Name = "Method1";
-		    var method1ReturnType = typeof(string);
+		    var method1ReturnType = typeof(void);
 		    var method1Params = new List<Type> { typeof(int), typeof(string) };
 
 			var testEvaluator = new TestEvaluator();
@@ -97,7 +97,8 @@ namespace DynamicTypeGenerator.Tests
 		    var ctorParamValueMapping = new Dictionary<Type, object>
 		    {
 			    {typeof(IInvokationEvaluator), testEvaluator},
-		    };
+			    {typeof(string), "Hello"},
+            };
 
 		    var paramsValueMapping = new Dictionary<Type, object>
 		    {
@@ -105,7 +106,7 @@ namespace DynamicTypeGenerator.Tests
 			    {typeof(string), "sdf"},
 			};
 
-		    var builder = DynamicTypeBuilderFactory.CreateClassBuilder("Dynamic.TestClass", new Dictionary<string, Type>());
+		    var builder = DynamicTypeBuilderFactory.CreateClassBuilder("Dynamic.TestClass", new Dictionary<string, Type>{{"manamHaji", typeof(string)}});
 
 		    SetMethod(builder, method1Name, method1ReturnType, method1Params);
 

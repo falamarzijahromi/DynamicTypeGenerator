@@ -71,10 +71,13 @@ namespace DynamicTypeGenerator.Builders.Auxiliaries
         {
             GenerateCallObjectBaseCtor(ilGen);
 
+            ilGen.Emit(OpCodes.Nop);
+            ilGen.Emit(OpCodes.Nop);
+
             for (int i = 0; i < fieldBuilders.Count; i++)
             {
                 ilGen.Emit(OpCodes.Ldarg_0);
-                ilGen.Emit(OpCodes.Ldarg_S, i + 1);
+                ilGen.Emit(OpCodes.Ldarg, i + 1);
                 ilGen.Emit(OpCodes.Stfld, fieldBuilders[i]);
             }
 

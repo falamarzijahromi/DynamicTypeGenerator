@@ -189,7 +189,7 @@ namespace DynamicTypeGenerator.Tests
 
 		    var method = @object.GetType().GetMethod(methodName);
 
-		    method.Invoke(@object, paramsValueMapping.Values.ToArray());
+		    var result = method.Invoke(@object, paramsValueMapping.Values.ToArray());
 	    }
     }
 }

@@ -61,6 +61,8 @@
     <Compile Include="Builders\DynamicDtoBuilder.cs" />
     <Compile Include="Builders\DynamicInterfaceBuilder.cs" />
     <Compile Include="DynamicTypeBuilderFactory.cs" />
+    <Compile Include="Invokations\ArgInfo.cs" />
+    <Compile Include="Invokations\InvokationContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

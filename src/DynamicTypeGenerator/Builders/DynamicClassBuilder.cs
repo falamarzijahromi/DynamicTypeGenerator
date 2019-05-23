@@ -15,7 +15,9 @@ namespace DynamicTypeGenerator.Builders
         {
             var moduleBuilder = CreateModuleBuilder();
 
-            TypeBuilder = moduleBuilder.DefineType(className, TypeAttributes.Class | TypeAttributes.Public);
+            TypeBuilder = moduleBuilder.DefineType(
+                className, 
+                TypeAttributes.Class | TypeAttributes.Public | TypeAttributes.AutoClass | TypeAttributes.AnsiClass | TypeAttributes.BeforeFieldInit);
 
 			var ctorBuilder = new DynamicClassCtorBuilder(ctorParams);
 

@@ -5,3 +5,7 @@
 /.vs
 /src/.vs/DynamicTypeGenerator/v15
 /src/packages
+/src/DynamicTypeGenerator/bin
+/src/DynamicTypeGenerator/obj
+/src/DynamicTypeGenerator.Test/obj
+/src/DynamicTypeGenerator.Test/bin

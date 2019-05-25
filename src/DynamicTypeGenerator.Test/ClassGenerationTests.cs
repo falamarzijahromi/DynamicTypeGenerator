@@ -126,7 +126,7 @@ namespace DynamicTypeGenerator.Tests
 	    {
 		    var method1Name = "Method1";
 		    var method1ReturnType = returnType;
-		    var method1Params = new List<Type> { typeof(int), typeof(string) };
+		    var method1Params = new List<Type> { typeof(int), typeof(string), typeof(Exception) };
 
 			var testEvaluator = new TestEvaluatorMock();
 
@@ -140,7 +140,8 @@ namespace DynamicTypeGenerator.Tests
 		    {
 			    {typeof(int), 21},
 			    {typeof(string), "sdf"},
-			};
+			    {typeof(Exception), new Exception("Hello Evaluator")},
+            };
 
 		    var builder = DynamicTypeBuilderFactory.CreateClassBuilder("Dynamic.TestClass", new Dictionary<string, Type>{{"someId", typeof(string)}});
 
@@ -153,6 +154,8 @@ namespace DynamicTypeGenerator.Tests
 			    classType,
 			    ctorParamValueMapping,
 			    paramsValueMapping);
+
+            testEvaluator.AssertInvokationContext();
 	    }
 
 	    private void CallMethodOfTypeWithParams(

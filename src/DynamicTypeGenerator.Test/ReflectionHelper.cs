@@ -56,7 +56,7 @@ namespace DynamicTypeGenerator.Tests
         {
             var member = generatedType.GetProperty(propertyName);
 
-            return CheckSatisfaction(attributeType, propertiesValuesMapping, member);
+            return CheckAttributeSatisfaction(attributeType, propertiesValuesMapping, member);
         }
 
         public static bool HasMethod(Type type, string methodName, Type returnType, IList<Type> paramTypes)
@@ -99,7 +99,7 @@ namespace DynamicTypeGenerator.Tests
         {
             var member = interfaceType.GetMethod(methodName);
 
-            return CheckSatisfaction(attributeType, attributePropertyValueMapping, member);
+            return CheckAttributeSatisfaction(attributeType, attributePropertyValueMapping, member);
         }
 
         public static bool InstanciatedObjectHasSpecifiedFieldValues(Type classType, Dictionary<string, object> fieldValues)
@@ -128,10 +128,37 @@ namespace DynamicTypeGenerator.Tests
 
         public static bool HasAttributeOnType(Type interfaceType, Type attributeType, IDictionary<Type, object> attributeCtorParamValueMapping, IDictionary<string, object> attributePropertyValueMapping)
         {
-            return CheckSatisfaction(attributeType, attributePropertyValueMapping, interfaceType);
+            return CheckAttributeSatisfaction(attributeType, attributePropertyValueMapping, interfaceType);
         }
 
-        private static bool CheckSatisfaction(Type attributeType, IDictionary<string, object> attributePropertyValueMapping, MemberInfo member)
+	    public static void ExecuteMethod(
+		    Type classType, 
+		    string methodName, 
+		    Dictionary<Type, object> ctorParamValueMapping, 
+		    Dictionary<Type, object> paramsValueMapping)
+	    {
+		    var @object = Activator.CreateInstance(classType, ctorParamValueMapping.Values.ToArray());
+
+		    var method = @object.GetType().GetMethod(methodName);
+
+		    var result = method.Invoke(@object, paramsValueMapping.Values.ToArray());
+	    }
+
+        public static bool MethodHasAttributes(Type classType, string methodName, IDictionary<Type, IDictionary<string, object>> propValuesMapping)
+        {
+            var method = classType.GetMethod(methodName);
+
+            var satisfied = true;
+
+            foreach (var mapping in propValuesMapping)
+            {
+                satisfied = satisfied && CheckAttributeSatisfaction(mapping.Key, mapping.Value, method);
+            }
+
+            return satisfied;
+        }
+
+        private static bool CheckAttributeSatisfaction(Type attributeType, IDictionary<string, object> attributePropertyValueMapping, MemberInfo member)
         {
             var attributeData = GetAttribute(member, attributeType);
 
@@ -161,12 +188,12 @@ namespace DynamicTypeGenerator.Tests
         private static object GetFromProperty(PropertyInfo propertyInfo, object instance)
         {
             return propertyInfo.GetGetMethod(false)
-                            .Invoke(
-                                instance,
-                                BindingFlags.Public,
-                                null,
-                                new object[] { },
-                                CultureInfo.CurrentCulture);
+                .Invoke(
+                    instance,
+                    BindingFlags.Public,
+                    null,
+                    new object[] { },
+                    CultureInfo.CurrentCulture);
         }
 
         private static object GetDefaultValue(Type type)
@@ -178,18 +205,5 @@ namespace DynamicTypeGenerator.Tests
 
             return null;
         }
-
-	    public static void ExecuteMethod(
-		    Type classType, 
-		    string methodName, 
-		    Dictionary<Type, object> ctorParamValueMapping, 
-		    Dictionary<Type, object> paramsValueMapping)
-	    {
-		    var @object = Activator.CreateInstance(classType, ctorParamValueMapping.Values.ToArray());
-
-		    var method = @object.GetType().GetMethod(methodName);
-
-		    var result = method.Invoke(@object, paramsValueMapping.Values.ToArray());
-	    }
     }
 }

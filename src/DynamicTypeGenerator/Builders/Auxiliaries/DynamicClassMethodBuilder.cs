@@ -34,6 +34,8 @@ namespace DynamicTypeGenerator.Builders.Auxiliaries
             var methodBuilder = DefineMethod(typeBuilder);
 
             DefineMethodBody(methodBuilder);
+
+            SetMethodAttribues(methodBuilder);
         }
 
         public void SetAttribute(
@@ -59,6 +61,14 @@ namespace DynamicTypeGenerator.Builders.Auxiliaries
             this.returnType = returnType;
 
             return this;
+        }
+
+        private void SetMethodAttribues(MethodBuilder methodBuilder)
+        {
+            foreach (var attribute in attributes)
+            {
+                methodBuilder.SetCustomAttribute(attribute);
+            }
         }
 
         private void DefineMethodBody(MethodBuilder methodBuilder)

@@ -85,7 +85,7 @@ namespace DynamicTypeGenerator.Tests
             AssertInstaciatedObjectHavingSpecifiedFieldValues(classType, fieldValues);
         }
 
-	    [Theory]
+        [Theory]
 
         [InlineData(typeof(int))]
         [InlineData(typeof(Guid))]
@@ -123,51 +123,95 @@ namespace DynamicTypeGenerator.Tests
         [InlineData(typeof(List<ConsoleColor>))]
 
         public void Dynamic_Class_Must_Be_Created_With_The_Defined_Working_Method_With_Specified_Return_Type(Type returnType)
-	    {
-		    var method1Name = "Method1";
-		    var method1ReturnType = returnType;
-		    var method1Params = new List<Type> { typeof(int), typeof(string), typeof(Exception) };
+        {
+            var method1Name = "Method1";
+            var method1ReturnType = returnType;
+            var method1Params = new List<Type> { typeof(int), typeof(string), typeof(Exception) };
 
-			var testEvaluator = new TestEvaluatorMock();
+            var testEvaluator = new TestEvaluatorMock();
 
-		    var ctorParamValueMapping = new Dictionary<Type, object>
-		    {
-			    {typeof(IInvokationEvaluator), testEvaluator},
-			    {typeof(string), "someString"},
+            var ctorParamValueMapping = new Dictionary<Type, object>
+            {
+                {typeof(IInvokationEvaluator), testEvaluator},
+                {typeof(string), "someString"},
             };
 
-		    var paramsValueMapping = new Dictionary<Type, object>
-		    {
-			    {typeof(int), 21},
-			    {typeof(string), "sdf"},
-			    {typeof(Exception), new Exception("Hello Evaluator")},
+            var paramsValueMapping = new Dictionary<Type, object>
+            {
+                {typeof(int), 21},
+                {typeof(string), "sdf"},
+                {typeof(Exception), new Exception("Hello Evaluator")},
             };
 
-		    var builder = DynamicTypeBuilderFactory.CreateClassBuilder("Dynamic.TestClass", new Dictionary<string, Type>{{"someId", typeof(string)}});
+            var builder = DynamicTypeBuilderFactory.CreateClassBuilder("Dynamic.TestClass", new Dictionary<string, Type> { { "someId", typeof(string) } });
 
-		    SetMethod(builder, method1Name, method1ReturnType, method1Params);
+            SetMethod(builder, method1Name, method1ReturnType, method1Params);
 
-		    var classType = builder.Build();
+            var classType = builder.Build();
 
-		    CallMethodOfTypeWithParams(
-				method1Name,
-			    classType,
-			    ctorParamValueMapping,
-			    paramsValueMapping);
+            CallMethodOfTypeWithParams(
+                method1Name,
+                classType,
+                ctorParamValueMapping,
+                paramsValueMapping);
 
             testEvaluator.AssertInvokationContext();
-	    }
+        }
 
-	    private void CallMethodOfTypeWithParams(
-			string methodName,
-		    Type classType,
-		    Dictionary<Type, object> ctorParamValueMapping, 
-		    Dictionary<Type, object> paramsValueMapping)
-	    {
-		    ReflectionHelper.ExecuteMethod(classType, methodName, ctorParamValueMapping, paramsValueMapping);
-	    }
+        [Fact]
+        public void Dynamic_Class_Must_Be_Created_With_Specified_Method_And_Its_Attribute()
+        {
+            var method1Name = "Method1";
+            var method1ReturnType = typeof(string);
+            var method1Params = new List<Type> { typeof(int), typeof(string) };
+            var attributeType = typeof(SampleAttribute);
+            var ctorParamsMapping = SampleAttribute.GetCtorParamValueMapping();
+            var propsValuesMapping = SampleAttribute.GetPropertyValueMaaping();
+            var setAttributeParam = new Dictionary<Type, Tuple<IDictionary<Type, object>, IDictionary<string, object>>>
+            {
+                {attributeType,  new Tuple<IDictionary<Type, object>, IDictionary<string, object>>(ctorParamsMapping, propsValuesMapping) },
+            };
 
-	    private void AssertInstaciatedObjectHavingSpecifiedFieldValues(Type classType, Dictionary<string, object> fieldValues)
+
+            var builder = DynamicTypeBuilderFactory.CreateClassBuilder("Dynamic.TestClass", new Dictionary<string, Type>());
+
+            SetMethod(builder, method1Name, method1ReturnType, method1Params, setAttributeParam);
+
+            var classType = builder.Build();
+
+            AssertOnHavingMethodWithAttribute(
+                classType: classType,
+                methodName: method1Name,
+                returnType: method1ReturnType,
+                @params: method1Params,
+                propValuesMapping: new Dictionary<Type, IDictionary<string, object>>
+                {
+                    {attributeType, propsValuesMapping },
+                });
+        }
+
+        private void AssertOnHavingMethodWithAttribute(Type classType, string methodName, Type returnType, List<Type> @params, IDictionary<Type, IDictionary<string, object>> propValuesMapping)
+        {
+            AssertOnHavingMethod(classType, methodName, returnType, @params);
+
+            AssertMethodHasAttributes(classType, methodName, propValuesMapping);
+        }
+
+        private void AssertMethodHasAttributes(Type classType, string methodName, IDictionary<Type, IDictionary<string, object>> propValuesMapping)
+        {
+            Assert.True(ReflectionHelper.MethodHasAttributes(classType, methodName, propValuesMapping));
+        }
+
+        private void CallMethodOfTypeWithParams(
+            string methodName,
+            Type classType,
+            Dictionary<Type, object> ctorParamValueMapping,
+            Dictionary<Type, object> paramsValueMapping)
+        {
+            ReflectionHelper.ExecuteMethod(classType, methodName, ctorParamValueMapping, paramsValueMapping);
+        }
+
+        private void AssertInstaciatedObjectHavingSpecifiedFieldValues(Type classType, Dictionary<string, object> fieldValues)
         {
             Assert.True(ReflectionHelper.InstanciatedObjectHasSpecifiedFieldValues(classType, fieldValues));
         }
@@ -181,7 +225,8 @@ namespace DynamicTypeGenerator.Tests
             IDynamicTypeBuilder classBuilder,
             string methodName,
             Type returnType,
-            IList<Type> @params)
+            IList<Type> @params,
+            IDictionary<Type, Tuple<IDictionary<Type, object>, IDictionary<string, object>>> attributes = null)
         {
             var methodBuilder = classBuilder.SetMethod(methodName);
 
@@ -191,6 +236,14 @@ namespace DynamicTypeGenerator.Tests
             }
 
             methodBuilder.SetReturnType(returnType);
+
+            if (attributes != null)
+            {
+                foreach (var attribute in attributes)
+                {
+                    methodBuilder.SetAttribute(attribute.Key, attribute.Value.Item1, attribute.Value.Item2);
+                }
+            }
         }
 
         private void AssertOnHavingMethod(Type classType, string methodName, Type returnType, IList<Type> @params)

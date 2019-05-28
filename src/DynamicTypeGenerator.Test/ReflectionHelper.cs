@@ -205,5 +205,45 @@ namespace DynamicTypeGenerator.Tests
 
             return null;
         }
+
+        public static bool HasMethod(Type type, string methodName, Type returnType, Dictionary<Type, string> @params)
+        {
+            var methodInfo = type.GetMethod(methodName);
+
+            if (methodInfo == null || methodInfo.ReturnType != returnType)
+            {
+                return false;
+            }
+
+            var methodParams = methodInfo.GetParameters();
+
+            if (methodParams.Length != @params.Count)
+            {
+                return false;
+            }
+
+            var index = 0;
+
+            foreach (var param in @params)
+            {
+                var parameterInfo = methodParams[index];
+
+                var paramIsOk = (parameterInfo.ParameterType.Equals(param.Key));
+
+                if (paramIsOk)
+                {
+                    paramIsOk = paramIsOk && (parameterInfo.Name.Equals(param.Value));
+                }
+
+                if (!paramIsOk)
+                {
+                    return false;
+                }
+
+                index++;
+            }
+
+            return true;
+        }
     }
 }

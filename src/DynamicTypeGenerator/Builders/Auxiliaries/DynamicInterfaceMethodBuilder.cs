@@ -10,7 +10,7 @@ namespace DynamicTypeGenerator.Builders.Auxiliaries
     public class DynamicInterfaceMethodBuilder : IDynamicMethodBuilder, IBuildStep
     {
         private readonly string methodName;
-        private readonly IList<Type> parameterTypes;
+        private readonly IDictionary<Type, string> parameterTypes;
         private readonly IList<CustomAttributeBuilder> attributes;
         
         private Type returnType;
@@ -21,7 +21,7 @@ namespace DynamicTypeGenerator.Builders.Auxiliaries
 
             returnType = typeof(void);
 
-            parameterTypes = new List<Type>();
+            parameterTypes = new Dictionary<Type, string>();
 
             attributes = new List<CustomAttributeBuilder>();
         }
@@ -37,9 +37,11 @@ namespace DynamicTypeGenerator.Builders.Auxiliaries
             attributes.Add(attribute);
         }
 
-        public IDynamicMethodBuilder SetParameter(Type parameterType)
+        public IDynamicMethodBuilder SetParameter(Type parameterType, string paramName)
         {
-            parameterTypes.Add(parameterType);
+            paramName = paramName ?? string.Empty;
+
+            parameterTypes.Add(parameterType, paramName);
 
             return this;
         }
@@ -58,7 +60,16 @@ namespace DynamicTypeGenerator.Builders.Auxiliaries
                 MethodAttributes.Public | MethodAttributes.Abstract | MethodAttributes.Virtual,
                 CallingConventions.Standard,
                 returnType,
-                parameterTypes.ToArray());
+                parameterTypes.Keys.ToArray());
+
+            var index = 1;
+
+            foreach (var paramName in parameterTypes.Values)
+            {
+                methodBuilder.DefineParameter(index, ParameterAttributes.None, paramName);
+
+                index++;
+            }
 
             AddAttributes(methodBuilder);
         }

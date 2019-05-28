@@ -12,7 +12,7 @@ namespace DynamicTypeGenerator.Builders.Auxiliaries
     {
         private readonly string methodName;
         private readonly IList<CustomAttributeBuilder> attributes;
-        private readonly IList<Type> @params;
+        private readonly IDictionary<Type, string> @params;
         private readonly IList<FieldBuilder> fields;
 
         private Type returnType;
@@ -22,7 +22,7 @@ namespace DynamicTypeGenerator.Builders.Auxiliaries
         {
             this.methodName = methodName;
             attributes = new List<CustomAttributeBuilder>();
-            @params = new List<Type>();
+            @params = new Dictionary<Type, string>();
 
             returnType = typeof(void);
 
@@ -49,9 +49,11 @@ namespace DynamicTypeGenerator.Builders.Auxiliaries
             attributes.Add(attribute);
         }
 
-        public IDynamicMethodBuilder SetParameter(Type parameterType)
+        public IDynamicMethodBuilder SetParameter(Type parameterType, string parameterName = null)
         {
-            @params.Add(parameterType);
+            parameterName = parameterName ?? string.Empty;
+
+            @params.Add(parameterType, parameterName);
 
             return this;
         }
@@ -130,23 +132,25 @@ namespace DynamicTypeGenerator.Builders.Auxiliaries
             var addParamMethod = typeof(InvokationContext).GetMethod(nameof(InvokationContext.AddParameter),
                 BindingFlags.Instance | BindingFlags.Public);
 
-            for (int i = 0; i < @params.Count; i++)
-            {
-                var param = @params[i];
+            var index = 1;
 
+            foreach (var param in @params)
+            {
                 ilGen.Emit(OpCodes.Ldloc, invokationContextVariable);
 
-                ilGen.Emit(OpCodes.Ldstr, $"arg_{i}");
+                ilGen.Emit(OpCodes.Ldstr, param.Value);
 
-                PushTypeToStack(ilGen, param);
+                PushTypeToStack(ilGen, param.Key);
 
-                ilGen.Emit(OpCodes.Ldarg, i + 1);
+                ilGen.Emit(OpCodes.Ldarg, index);
 
-                BoxIfRequired(ilGen, param);
+                BoxIfRequired(ilGen, param.Key);
 
                 ilGen.Emit(OpCodes.Callvirt, addParamMethod);
 
                 ilGen.Emit(OpCodes.Nop);
+
+                index++;
             }
         }
 
@@ -214,11 +218,22 @@ namespace DynamicTypeGenerator.Builders.Auxiliaries
 
         private MethodBuilder DefineMethod(TypeBuilder typeBuilder)
         {
-            return typeBuilder.DefineMethod(
+            var methodBuilder = typeBuilder.DefineMethod(
                 methodName,
                 MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.SpecialName | MethodAttributes.RTSpecialName,
                 CallingConventions.HasThis, returnType,
-                @params.ToArray());
+                @params.Keys.ToArray());
+
+            var index = 1;
+
+            foreach (var paramName in @params.Values)
+            {
+                var parameterBuilder = methodBuilder.DefineParameter(index, ParameterAttributes.None, paramName);
+
+                index++;
+            }
+
+            return methodBuilder;
         }
     }
 }

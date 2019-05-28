@@ -190,11 +190,72 @@ namespace DynamicTypeGenerator.Tests
                 });
         }
 
+        [Fact]
+        public void Dynamic_Class_Must_Be_Created_With_Specified_Method_With_Its_Parameter_Names()
+        {
+            var method1Name = "Method1";
+            var method1ReturnType = typeof(string);
+            var method1Params = new Dictionary<Type, string>
+            {
+                {typeof(int), "number"},
+                {typeof(string), "message"},
+            };
+            var attributeType = typeof(SampleAttribute);
+            var ctorParamsMapping = SampleAttribute.GetCtorParamValueMapping();
+            var propsValuesMapping = SampleAttribute.GetPropertyValueMaaping();
+            var setAttributeParam = new Dictionary<Type, Tuple<IDictionary<Type, object>, IDictionary<string, object>>>
+            {
+                {attributeType,  new Tuple<IDictionary<Type, object>, IDictionary<string, object>>(ctorParamsMapping, propsValuesMapping) },
+            };
+
+
+            var builder = DynamicTypeBuilderFactory.CreateClassBuilder("Dynamic.TestClass", new Dictionary<string, Type>());
+
+            SetMethod(builder, method1Name, method1ReturnType, method1Params, setAttributeParam);
+
+            var classType = builder.Build();
+
+            AssertOnHavingMethodWithParamNames(
+                classType: classType,
+                methodName: method1Name,
+                returnType: method1ReturnType,
+                @params: method1Params,
+                propValuesMapping: new Dictionary<Type, IDictionary<string, object>>
+                {
+                    {attributeType, propsValuesMapping },
+                });
+        }
+
         private void AssertOnHavingMethodWithAttribute(Type classType, string methodName, Type returnType, List<Type> @params, IDictionary<Type, IDictionary<string, object>> propValuesMapping)
         {
             AssertOnHavingMethod(classType, methodName, returnType, @params);
 
             AssertMethodHasAttributes(classType, methodName, propValuesMapping);
+        }
+
+        private void SetMethod(IDynamicTypeBuilder builder, string method1Name, Type method1ReturnType, Dictionary<Type, string> method1Params, Dictionary<Type, Tuple<IDictionary<Type, object>, IDictionary<string, object>>> setAttributeParam)
+        {
+            var methodBuilder = builder.SetMethod(method1Name);
+
+            foreach (var param in method1Params)
+            {
+                methodBuilder.SetParameter(param.Key, param.Value);
+            }
+
+            methodBuilder.SetReturnType(method1ReturnType);
+
+            if (setAttributeParam != null)
+            {
+                foreach (var attribute in setAttributeParam)
+                {
+                    methodBuilder.SetAttribute(attribute.Key, attribute.Value.Item1, attribute.Value.Item2);
+                }
+            }
+        }
+
+        private void AssertOnHavingMethodWithParamNames(Type classType, string methodName, Type returnType, Dictionary<Type, string> @params, IDictionary<Type, IDictionary<string, object>> propValuesMapping)
+        {
+            Assert.True(ReflectionHelper.HasMethod(classType, methodName, returnType, @params));
         }
 
         private void AssertMethodHasAttributes(Type classType, string methodName, IDictionary<Type, IDictionary<string, object>> propValuesMapping)

@@ -15,14 +15,12 @@ namespace DynamicTypeGenerator.Abstracts
             _buildSteps = new List<IBuildStep>();
         }
 
-        public IDynamicTypeBuilder SetAttribute(Type attributeType, IDictionary<Type, object> ctorParamValueMapping, IDictionary<string, object> propertyValueMapping)
+        public void SetAttribute(Type attributeType, IDictionary<Type, object> ctorParamValueMapping, IDictionary<string, object> propertyValueMapping)
         {
             var attributeSetter =
                 new DynamicTypeAttributeSetter(attributeType, ctorParamValueMapping, propertyValueMapping);
 
             AddBuildStep(attributeSetter);
-
-            return this;
         }
 
         public abstract IDynamicPropertyBuilder SetProperty(string propertyName, Type propertyType);

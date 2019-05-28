@@ -3,13 +3,8 @@ using System.Collections.Generic;
 
 namespace DynamicTypeGenerator.Abstracts
 {
-    public interface IDynamicTypeBuilder
+    public interface IDynamicTypeBuilder : IDynamicAttributeSetter
     {
-        IDynamicTypeBuilder SetAttribute(
-            Type attributeType, 
-            IDictionary<Type, object> ctorParamValueMapping,
-            IDictionary<string, object> propertyValueMapping);
-
         IDynamicPropertyBuilder SetProperty(string propertyName, Type propertyType);
 
         IDynamicMethodBuilder SetMethod(string methodName);

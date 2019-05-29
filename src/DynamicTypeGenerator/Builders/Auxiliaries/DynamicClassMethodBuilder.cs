@@ -220,7 +220,7 @@ namespace DynamicTypeGenerator.Builders.Auxiliaries
         {
             var methodBuilder = typeBuilder.DefineMethod(
                 methodName,
-                MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.SpecialName | MethodAttributes.RTSpecialName,
+                MethodAttributes.Public | MethodAttributes.Virtual | MethodAttributes.HideBySig | MethodAttributes.SpecialName | MethodAttributes.RTSpecialName,
                 CallingConventions.HasThis, returnType,
                 @params.Keys.ToArray());
 

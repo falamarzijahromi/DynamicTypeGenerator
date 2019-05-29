@@ -48,6 +48,52 @@ namespace DynamicTypeGenerator.Tests
                 gottenValue == value;
         }
 
+        public static bool HasImplementedInterface(Type type, Type implementedInterface)
+        {
+            var intefaceMethods = implementedInterface.GetMethods();
+
+            foreach (var method in intefaceMethods)
+            {
+                var targetMethod = type.GetMethod(method.Name);
+
+                if (targetMethod == null)
+                {
+                    return false;
+                }
+
+                var isOk = targetMethod.ReturnType.Equals(method.ReturnType);
+
+                isOk = isOk && HasSameParameters(targetMethod.GetParameters(), method.GetParameters());
+
+                if (!isOk)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private static bool HasSameParameters(ParameterInfo[] parameterInfos1, ParameterInfo[] parameterInfos2)
+        {
+            for (int i = 0; i < parameterInfos1.Length; i++)
+            {
+                var param1 = parameterInfos1[i];
+                var param2 = parameterInfos2[i];
+
+                var isOk =
+                    param1.ParameterType.Equals(param2.ParameterType) &&
+                    param1.Name.Equals(param2.Name);
+
+                if (!isOk)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         public static bool HasAttributeOnPropertyWithFollowingPropertyValues(
             Type generatedType,
             string propertyName,
@@ -131,18 +177,18 @@ namespace DynamicTypeGenerator.Tests
             return CheckAttributeSatisfaction(attributeType, attributePropertyValueMapping, interfaceType);
         }
 
-	    public static void ExecuteMethod(
-		    Type classType, 
-		    string methodName, 
-		    Dictionary<Type, object> ctorParamValueMapping, 
-		    Dictionary<Type, object> paramsValueMapping)
-	    {
-		    var @object = Activator.CreateInstance(classType, ctorParamValueMapping.Values.ToArray());
+        public static void ExecuteMethod(
+            Type classType,
+            string methodName,
+            Dictionary<Type, object> ctorParamValueMapping,
+            Dictionary<Type, object> paramsValueMapping)
+        {
+            var @object = Activator.CreateInstance(classType, ctorParamValueMapping.Values.ToArray());
 
-		    var method = @object.GetType().GetMethod(methodName);
+            var method = @object.GetType().GetMethod(methodName);
 
-		    var result = method.Invoke(@object, paramsValueMapping.Values.ToArray());
-	    }
+            var result = method.Invoke(@object, paramsValueMapping.Values.ToArray());
+        }
 
         public static bool MethodHasAttributes(Type classType, string methodName, IDictionary<Type, IDictionary<string, object>> propValuesMapping)
         {

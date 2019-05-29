@@ -9,19 +9,21 @@ namespace DynamicTypeGenerator.Builders
 {
     internal class DynamicClassBuilder : DynamicTypeBuilder
     {
-	    private readonly IList<FieldBuilder> fields;
+        private readonly IList<FieldBuilder> fields;
 
-        public DynamicClassBuilder(string className, IDictionary<string, Type> ctorParams)
+        public DynamicClassBuilder(string className, IDictionary<string, Type> ctorParams, Type @interface = null)
         {
             var moduleBuilder = CreateModuleBuilder();
 
             TypeBuilder = moduleBuilder.DefineType(
-                className, 
+                className,
                 TypeAttributes.Class | TypeAttributes.Public | TypeAttributes.AutoClass | TypeAttributes.AnsiClass | TypeAttributes.BeforeFieldInit);
 
-			var ctorBuilder = new DynamicClassCtorBuilder(ctorParams);
+            var ctorBuilder = new DynamicClassCtorBuilder(ctorParams);
 
-	        fields = ctorBuilder.Build(TypeBuilder);
+            fields = ctorBuilder.Build(TypeBuilder);
+
+            AddInterfaceImplementationSteps(@interface);
         }
 
         protected override TypeBuilder TypeBuilder { get; }
@@ -38,6 +40,40 @@ namespace DynamicTypeGenerator.Builders
         public override IDynamicPropertyBuilder SetProperty(string propertyName, Type propertyType)
         {
             throw new NotSupportedException("Property For Class Still Doesn't Requested");
+        }
+
+        private void AddInterfaceImplementationSteps(Type @interface)
+        {
+            if (@interface != null)
+            {
+                TypeBuilder.AddInterfaceImplementation(@interface);
+
+                AddInterfaceMethodBuildSteps(@interface);
+            }
+        }
+
+        private void AddInterfaceMethodBuildSteps(Type @interface)
+        {
+            var interfaceMethods = @interface.GetMethods();
+
+            foreach (var method in interfaceMethods)
+            {
+                var methodBuilder = new DynamicClassMethodBuilder(method.Name, fields);
+
+                methodBuilder.SetReturnType(method.ReturnType);
+
+                AddMethodParameters(method, methodBuilder);
+
+                AddBuildStep(methodBuilder);
+            }
+        }
+
+        private static void AddMethodParameters(MethodInfo method, DynamicClassMethodBuilder methodBuilder)
+        {
+            foreach (var param in method.GetParameters())
+            {
+                methodBuilder.SetParameter(param.ParameterType, param.Name);
+            }
         }
     }
 }

@@ -22,7 +22,6 @@ namespace DynamicTypeGenerator
             return new DynamicClassBuilder(className, ctorParamTypeMapping, @interface);
         }
 
-        [Obsolete("This factory method is obsolete and it will be removed from next versions", false)]
         public static IDynamicTypeBuilder CreateClassBuilder(string className, IDictionary<string, Type> ctorParamTypeMapping)
         {
             return new DynamicClassBuilder(className, ctorParamTypeMapping, null);

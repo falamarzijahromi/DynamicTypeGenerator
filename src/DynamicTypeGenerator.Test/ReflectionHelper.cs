@@ -50,6 +50,11 @@ namespace DynamicTypeGenerator.Tests
 
         public static bool HasImplementedInterface(Type type, Type implementedInterface)
         {
+            if (!implementedInterface.IsAssignableFrom(type))
+            {
+                return false;
+            }
+
             var intefaceMethods = implementedInterface.GetMethods();
 
             foreach (var method in intefaceMethods)

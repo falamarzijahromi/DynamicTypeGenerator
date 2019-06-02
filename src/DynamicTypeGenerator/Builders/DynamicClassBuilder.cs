@@ -11,7 +11,7 @@ namespace DynamicTypeGenerator.Builders
     {
         private readonly IList<FieldBuilder> fields;
 
-        public DynamicClassBuilder(string className, IDictionary<string, Type> ctorParams, Type @interface = null)
+        public DynamicClassBuilder(string className, IDictionary<string, Type> ctorParams, params Type[] interfaces)
         {
             var moduleBuilder = CreateModuleBuilder();
 
@@ -23,7 +23,7 @@ namespace DynamicTypeGenerator.Builders
 
             fields = ctorBuilder.Build(TypeBuilder);
 
-            AddInterfaceImplementationSteps(@interface);
+            ImplementInterfaces(interfaces);
         }
 
         protected override TypeBuilder TypeBuilder { get; }
@@ -68,7 +68,15 @@ namespace DynamicTypeGenerator.Builders
             }
         }
 
-        private static void AddMethodParameters(MethodInfo method, DynamicClassMethodBuilder methodBuilder)
+        private void ImplementInterfaces(Type[] interfaces)
+        {
+            foreach (var @interface in interfaces)
+            {
+                AddInterfaceImplementationSteps(@interface);
+            }
+        }
+
+        private void AddMethodParameters(MethodInfo method, DynamicClassMethodBuilder methodBuilder)
         {
             foreach (var param in method.GetParameters())
             {

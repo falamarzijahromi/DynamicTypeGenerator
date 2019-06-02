@@ -8,19 +8,26 @@ namespace DynamicTypeGenerator.Tests
     public class InterfaceImplementationTests
     {
         [Fact]
-        public void Dynamic_Generated_Class_Must_Implemented_Specified_Interface()
+        public void Dynamic_Generated_Class_Must_Implemented_Specified_Interfaces()
         {
             var @interface = typeof(ISampleInterface);
+            var @interface2 = typeof(ISampleInterface2);
 
             var classBuilder =
-                DynamicTypeBuilderFactory.CreateClassBuilder(@interface.Name, @interface,
-                    new Dictionary<string, Type>());
+                DynamicTypeBuilderFactory.CreateClassBuilder(
+                    @interface.Name, 
+                    new Dictionary<string, Type>(),
+                    @interface, @interface2);
 
             var type = classBuilder.Build();
 
             AssertOnTypeHasImplementededInterface(
                 type: type,
                 implementedInterface: @interface);
+
+            AssertOnTypeHasImplementededInterface(
+                type: type,
+                implementedInterface: @interface2);
 
         }
 

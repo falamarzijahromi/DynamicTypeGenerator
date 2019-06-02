@@ -17,14 +17,14 @@ namespace DynamicTypeGenerator
             return new DynamicInterfaceBuilder(interfaceFullName);
         }
 
-        public static IDynamicTypeBuilder CreateClassBuilder(string className, Type @interface, IDictionary<string, Type> ctorParamTypeMapping)
+        public static IDynamicTypeBuilder CreateClassBuilder(string className, IDictionary<string, Type> ctorParamTypeMapping, params Type[] interfaces)
         {
-            return new DynamicClassBuilder(className, ctorParamTypeMapping, @interface);
+            return new DynamicClassBuilder(className, ctorParamTypeMapping, interfaces);
         }
 
         public static IDynamicTypeBuilder CreateClassBuilder(string className, IDictionary<string, Type> ctorParamTypeMapping)
         {
-            return new DynamicClassBuilder(className, ctorParamTypeMapping, null);
+            return new DynamicClassBuilder(className, ctorParamTypeMapping);
         }
     }
 }

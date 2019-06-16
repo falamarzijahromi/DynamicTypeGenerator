@@ -11,9 +11,9 @@ namespace DynamicTypeGenerator.Builders
     {
         private readonly IList<FieldBuilder> fields;
 
-        public DynamicClassBuilder(string className, IDictionary<string, Type> ctorParams, params Type[] interfaces)
+        public DynamicClassBuilder(string className, IDictionary<string, Type> ctorParams, ModuleBuilder moduleBuilder = null , params Type[] interfaces)
         {
-            var moduleBuilder = CreateModuleBuilder();
+            moduleBuilder = moduleBuilder ?? CreateModuleBuilder();
 
             TypeBuilder = moduleBuilder.DefineType(
                 className,

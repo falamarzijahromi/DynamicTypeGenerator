@@ -8,9 +8,9 @@ namespace DynamicTypeGenerator.Builders
 {
     internal class DynamicDtoBuilder : DynamicTypeBuilder
     {
-        public DynamicDtoBuilder(string classFullName)
+        public DynamicDtoBuilder(string classFullName, ModuleBuilder moduleBuilder = null)
         {
-            var moduleBuilder = CreateModuleBuilder();
+            moduleBuilder = moduleBuilder ?? CreateModuleBuilder();
 
             TypeBuilder = moduleBuilder.DefineType(classFullName, TypeAttributes.Public | TypeAttributes.Class);
         }

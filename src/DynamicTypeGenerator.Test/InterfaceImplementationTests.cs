@@ -16,7 +16,7 @@ namespace DynamicTypeGenerator.Tests
             var classBuilder =
                 DynamicTypeBuilderFactory.CreateClassBuilder(
                     @interface.Name, 
-                    new Dictionary<string, Type>(),
+                    new Dictionary<string, Type>(), null,
                     @interface, @interface2);
 
             var type = classBuilder.Build();
@@ -38,7 +38,7 @@ namespace DynamicTypeGenerator.Tests
 
             var classBuilder =
                 DynamicTypeBuilderFactory.CreateInterfaceBuilder(
-                    "DynamicInterface",
+                    "DynamicInterface", null,
                     @interface, @interface2);
 
             var type = classBuilder.Build();

@@ -10,11 +10,11 @@ namespace DynamicTypeGenerator.Builders
     {
         private readonly string interfaceFullName;
 
-        internal DynamicInterfaceBuilder(string interfaceFullName, params Type[] interfaces)
+        internal DynamicInterfaceBuilder(string interfaceFullName, ModuleBuilder moduleBuilder = null, params Type[] interfaces)
         {
             this.interfaceFullName = interfaceFullName;
 
-            var moduleBuilder = CreateModuleBuilder();
+            moduleBuilder = moduleBuilder ?? CreateModuleBuilder();
 
             TypeBuilder = moduleBuilder.DefineType(interfaceFullName, TypeAttributes.Public | TypeAttributes.Interface | TypeAttributes.Abstract);
 
